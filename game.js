@@ -131,19 +131,94 @@ function play(scene, buf, rate = 1, vol = 1) {
   src.start();
 }
 
-function startDrone(scene) {
+const MEL = [84,0,130,84,300,130,81,600,430,83,1200,130,79,1500,130,84,1800,130,84,2100,130,81,2400,430,83,3000,130,79,3300,130,84,3600,130,84,3900,130,81,4200,430,83,4800,130,79,5250,130,77,5400,1030,77,6900,130,83,7200,130,83,7500,130,83,7800,430,81,8400,130,79,8700,130,77,9000,730,74,9900,130,76,10200,130,77,10500,130,79,10800,130,79,11100,130,84,11400,430,83,12000,130,81,12300,130,76,12600,130,72,12900,730,84,14400,130,84,14700,130,81,15000,430,83,15600,130,79,15900,130,84,16200,130,84,16500,130,81,16800,430,83,17400,130,79,17700,130,84,18000,130,84,18300,130,81,18600,430,83,19200,130,79,19650,130,77,19800,1030,77,21300,130,83,21600,130,83,21900,130,83,22200,430,81,22800,130,79,23100,130,77,23400,730,74,24300,130,76,24600,130,77,24900,130,79,25200,130,79,25500,130,84,25800,430,83,26400,130,81,26700,130,76,27000,130,72,27300,730,88,28800,730,86,29700,580,77,30300,130,84,30450,130,81,30600,1480,86,32400,1030,84,33900,130,88,34200,130,84,34500,1030,79,35700,130,81,36000,130,81,36300,130,79,36600,280,81,36900,130,81,37200,130,79,37500,130,89,37800,130,89,38100,130,86,38400,280,83,39000,130,79,39300,130,81,39600,430,79,40200,880,77,41100,280,76,41400,880,72,42300,130,79,42900,130,88,43200,730,86,44100,580,77,44700,130,84,44850,130,81,45000,1480,86,46800,1030,84,48300,130,88,48600,130,84,48900,1030,79,50100,130,81,50400,130,81,50700,130,79,51000,280,81,51300,130,81,51600,130,79,51900,130,89,52200,130,89,52500,130,86,52800,280,83,53400,130,79,53700,130,81,54000,430,79,54600,880,77,55500,280,76,55800,880,72,56700,130,79,57300,130,72,57600,130];
+const BAS = [48,0,130,52,300,130,52,600,130,43,900,130,55,1200,130,55,1500,130,48,1800,130,52,2100,130,52,2400,130,43,2700,130,55,3000,130,55,3300,130,48,3600,130,52,3900,130,52,4200,130,48,4500,130,52,4800,130,52,5100,130,43,5400,130,55,5700,130,55,6000,130,50,6300,130,55,6600,130,55,6900,130,43,7200,130,55,7500,130,55,7800,130,50,8100,130,55,8400,130,55,8700,130,43,9000,130,55,9300,130,55,9600,130,50,9900,130,55,10200,130,55,10500,130,43,10800,130,55,11100,130,55,11400,130,50,11700,130,55,12000,130,55,12300,130,48,12600,130,52,12900,130,52,13200,130,43,13500,130,60,13800,130,52,14100,130,48,14400,130,52,14700,130,52,15000,130,43,15300,130,55,15600,130,55,15900,130,48,16200,130,52,16500,130,52,16800,130,43,17100,130,55,17400,130,55,17700,130,48,18000,130,52,18300,130,52,18600,130,48,18900,130,52,19200,130,52,19500,130,43,19800,130,55,20100,130,55,20400,130,50,20700,130,55,21000,130,55,21300,130,43,21600,130,55,21900,130,55,22200,130,50,22500,130,55,22800,130,55,23100,130,43,23400,130,55,23700,130,55,24000,130,50,24300,130,55,24600,130,55,24900,130,43,25200,130,55,25500,130,55,25800,130,50,26100,130,55,26400,130,55,26700,130,48,27000,130,52,27300,130,52,27600,130,43,27900,130,60,28200,130,52,28500,130,48,28800,130,52,29100,130,52,29400,130,43,29700,130,52,30000,130,52,30300,130,41,30600,130,53,30900,130,53,31200,130,50,31500,130,53,31800,130,53,32100,130,43,32400,130,55,32700,130,55,33000,130,50,33300,130,55,33600,130,55,33900,130,48,34200,130,52,34500,130,52,34800,130,43,35100,130,52,35400,130,52,35700,130,48,36000,130,52,36300,130,52,36600,130,43,36900,130,52,37200,130,52,37500,130,43,37800,130,55,38100,130,55,38400,130,50,38700,130,55,39000,130,55,39300,130,43,39600,130,55,39900,130,55,40200,130,50,40500,130,55,40800,130,55,41100,130,48,41400,130,52,41700,130,52,42000,130,43,42300,130,52,42600,130,52,42900,130,48,43200,130,52,43500,130,52,43800,130,43,44100,130,52,44400,130,52,44700,130,41,45000,130,53,45300,130,53,45600,130,50,45900,130,53,46200,130,53,46500,130,43,46800,130,55,47100,130,55,47400,130,50,47700,130,55,48000,130,55,48300,130,48,48600,130,52,48900,130,52,49200,130,43,49500,130,52,49800,130,52,50100,130,48,50400,130,52,50700,130,52,51000,130,43,51300,130,52,51600,130,52,51900,130,43,52200,130,55,52500,130,55,52800,130,50,53100,130,55,53400,130,55,53700,130,43,54000,130,55,54300,130,55,54600,130,50,54900,130,55,55200,130,55,55500,130,48,55800,130,52,56100,130,52,56400,130,43,56700,130,52,57000,130,52,57300,130,48,57600,130];
+const SONG_MS = 58330;
+const STAR_THEMES = [{m:[74,0,220,78,360,220,69,720,220,72,1080,220,76,1440,100,76,1680,100,67,1800,100,67,2040,100,71,2160,100,71,2400,100,74,2520,100,74,2760,100,72,2880,100,72,3120,100,76,3240,100,76,3480,100,79,3720,220,71,4080,220,74,4440,220,78,4800,220,69,5160,220,72,5520,100,72,5760,100,76,5880,100,76,6120,100,67,6240,100,67,6480,100,71,6600,100,71,6840,100,74,6960,100,74,7200,100,72,7320,100],b:[35,0,130,38,300,130,38,750,130,42,1050,130,33,1500,130,43,1800,130,35,2100,130,38,2550,130,36,2850,130,40,3300,130,43,3600,130,43,4050,130,35,4350,130,38,4800,130,38,5100,130,42,5550,130,33,5850,130,43,6300,130,35,6600,130,38,7050,130,36,7350,130]},{m:[79,0,100,78,240,100,79,360,100,81,600,220,83,960,100,79,1080,100,78,1320,100,79,1440,100,81,1680,220,83,2040,100,79,2280,100,78,2400,100,79,2640,100,81,2760,100,81,3000,100,83,3120,100,81,3480,100,83,3720,100,81,3840,100,83,4080,100,78,4200,100,74,4440,100,78,4680,100,81,4800,100,79,5040,100,78,5160,100,79,5400,100,81,5760,100,83,5880,100,81,6120,100,83,6240,100,78,6480,100,74,6720,100,78,6840,100,81,7080,100,79,7200,100,78,7440,100],b:[35,150,130,38,600,130,43,900,130,35,1350,130,38,1650,130,43,1950,130,35,2400,130,38,2700,130,43,3150,130,35,3450,130,38,3900,130,33,4500,130,38,4950,130,43,5400,130,35,5700,130,38,6150,130,33,6600,130,38,7200,130]},{m:[72,0,100,72,240,220,72,720,100,73,960,100,74,1200,220,74,1560,100,74,1920,100,78,2040,100,79,2280,220,79,2640,100,79,3000,100,73,3240,100,74,3360,100,74,3600,220,74,4080,100,71,4320,100,72,4440,100,72,4680,220,72,5280,100,73,5400,100,74,5640,220,74,6000,100,74,6360,100,78,6480,100,79,6720,220,79,7080,220,79,7440,100],b:[38,150,130,38,750,130,43,1350,130,43,1800,130,36,2400,130,36,3000,130,43,3600,130,43,4050,130,38,4650,130,38,5250,130,43,5700,130,43,6300,130,36,6750,130,40,7050,130,43,7500,130]},{m:[76,120,100,72,240,100,69,480,100,66,600,100,68,720,100,67,840,100,79,1200,100,83,1440,100,79,1560,100,83,1800,100,81,1920,100,78,2160,100,81,2280,100,79,2520,100,76,2640,100,79,2880,100,78,3120,100,72,3480,100,76,3600,100,72,3840,100,76,3960,100,74,4200,100,71,4320,100,74,4560,100,72,4680,100,69,4920,100,72,5040,100,71,5280,100,79,5640,100,83,5880,100,79,6000,100,83,6240,100,81,6360,100,78,6600,100,81,6720,100,79,6960,100,76,7080,100,79,7320,100,78,7560,100],b:[38,450,130,43,900,130,35,1200,130,38,1500,130,33,1950,130,37,2250,130,40,2700,130,38,3000,130,36,3450,130,36,3750,130,38,4200,130,40,4500,130,42,4950,130,43,5250,130,35,5700,130,38,6000,130,33,6450,130,37,6750,130,40,7050,130,38,7500,130]}];
+const STAR_MS = 7600;
+const midiHz = (p) => 440 * Math.pow(2, (p - 69) / 12);
+
+// Star-power theme — an energetic hook lifted from the supplied original MIDI
+// (bright square lead + triangle bass). Plays only while the star is active.
+
+// Music: "Cielito Lindo" (public domain) is the main loop; grabbing a star ducks
+// it and blasts the star theme, then crossfades back. All baked-in note data —
+// no asset files / no network.
+function startMusic(scene) {
   const ctx = scene.sound.context;
   if (ctx.state === 'suspended') ctx.resume();
-  if (scene._drone) return;
-  const g = ctx.createGain();
-  g.gain.value = 0.045;
-  g.connect(ctx.destination);
-  for (const f of [55, 82.4, 110]) {
+  if (scene._music) return;
+  scene._music = true;
+
+  const out = ctx.createGain();
+  out.gain.value = 0.6;
+  out.connect(ctx.destination);
+  const filt = ctx.createBiquadFilter();
+  filt.type = 'lowpass'; filt.frequency.value = 2600; filt.Q.value = 0.6;
+  filt.connect(out);
+
+  const dly = ctx.createDelay(0.6);
+  const fb = ctx.createGain();
+  dly.delayTime.value = 0.30; fb.gain.value = 0.22;
+  dly.connect(fb); fb.connect(dly); fb.connect(filt);
+
+  // two buses: mellow Cielito (through the lowpass) and bright star (direct)
+  const cielito = ctx.createGain(); cielito.gain.value = 1; cielito.connect(filt);
+  const star = ctx.createGain(); star.gain.value = 0; star.connect(out);
+
+  const voice = (freq, t, dur, type, peak, echo, dest) => {
     const o = ctx.createOscillator();
-    o.type = 'sine'; o.frequency.value = f;
-    o.connect(g); o.start();
-  }
-  scene._drone = g;
+    const g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    o.connect(g); g.connect(dest); if (echo) g.connect(dly);
+    const end = t + dur;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(peak, t + 0.02);
+    g.gain.setValueAtTime(peak, Math.max(t + 0.04, end - 0.06));
+    g.gain.exponentialRampToValueAtTime(0.0001, end + 0.02);
+    o.start(t); o.stop(end + 0.05);
+  };
+
+  const playSeq = (t0) => {
+    for (let i = 0; i < MEL.length; i += 3)
+      voice(midiHz(MEL[i]), t0 + MEL[i + 1] / 1000, MEL[i + 2] / 1000, 'triangle', 0.16, true, cielito);
+    for (let i = 0; i < BAS.length; i += 3)
+      voice(midiHz(BAS[i]), t0 + BAS[i + 1] / 1000, Math.min(BAS[i + 2], 260) / 1000, 'sine', 0.17, false, cielito);
+    scene.time.delayedCall(SONG_MS, () => playSeq(t0 + SONG_MS / 1000));
+  };
+  playSeq(ctx.currentTime + 0.25);
+
+  const playStar = (t0) => {
+    if (scene.G.ax.star <= 0) { scene._starSeq = false; return; }
+    const seg = scene._starSeg || STAR_THEMES[0];
+    for (let i = 0; i < seg.m.length; i += 3)
+      voice(midiHz(seg.m[i]), t0 + seg.m[i + 1] / 1000, seg.m[i + 2] / 1000, 'square', 0.13, false, star);
+    for (let i = 0; i < seg.b.length; i += 3)
+      voice(midiHz(seg.b[i]), t0 + seg.b[i + 1] / 1000, seg.b[i + 2] / 1000, 'triangle', 0.18, false, star);
+    scene.time.delayedCall(STAR_MS, () => playStar(t0 + STAR_MS / 1000));
+  };
+
+  const ramp = (node, v, dt) => {
+    const now = ctx.currentTime;
+    node.gain.cancelScheduledValues(now);
+    node.gain.setValueAtTime(node.gain.value, now);
+    node.gain.linearRampToValueAtTime(v, now + dt);
+  };
+  scene._starIdx = 0;
+  scene._setStar = (on) => {
+    if (on) {
+      ramp(cielito, 0, 0.12); ramp(star, 0.95, 0.05);
+      if (!scene._starSeq) {
+        // rotate to the next section each fresh star, so the theme varies
+        scene._starSeg = STAR_THEMES[scene._starIdx % STAR_THEMES.length];
+        scene._starIdx++;
+        scene._starSeq = true;
+        playStar(ctx.currentTime + 0.03);
+      }
+    } else {
+      ramp(cielito, 1, 0.35); ramp(star, 0, 0.25);
+    }
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -207,8 +282,8 @@ function freshState() {
     phase: 'title', t: 0, meters: 0, scrollSpeed: 190, spawnTimer: 0.8,
     hazards: [], foods: [], decor: [],
     ax: { x: W / 2, y: HOME_Y, vx: 0, vy: 0, tilt: 0, inv: 0, dash: 0, dashCd: 0,
-          limbs: 3, regen: 0, squash: 0, blink: 0, eatPulse: 0 },
-    combo: 0, comboTimer: 0, bestMeters: 0, foodBoost: 0,
+          limbs: 3, regen: 0, squash: 0, blink: 0, eatPulse: 0, star: 0 },
+    combo: 0, comboTimer: 0, bestMeters: 0, foodBoost: 0, lastStar: 0,
     shake: 0, hitStop: 0, flash: 0, speedlines: 0,
     overTimer: 0, finalM: 0,
     initials: [0, 0, 0], slot: 0, repeat: 0, qualifies: false, saved: false,
@@ -294,6 +369,18 @@ function buildTextures(scene) {
   g.fillStyle(C.deep, 1); g.fillTriangle(24, 24, 40, 14, 42, 30);
   g.generateTexture('lily', 48, 48);
 
+  // star power-up (gold, with a little face)
+  g.clear();
+  const sp = [];
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 ? 9 : 22, a = -Math.PI / 2 + i * Math.PI / 5;
+    sp.push({ x: 24 + Math.cos(a) * r, y: 24 + Math.sin(a) * r });
+  }
+  g.fillStyle(0xffe066, 1); g.fillPoints(sp, true);
+  g.fillStyle(0xfff6c0, 1); g.fillCircle(24, 22, 6);
+  g.fillStyle(0x241018, 1); g.fillCircle(21, 21, 1.7); g.fillCircle(27, 21, 1.7);
+  g.generateTexture('star', 48, 48);
+
   g.destroy();
 }
 
@@ -311,6 +398,7 @@ function buildSounds(scene) {
     over: makeBuffer(ctx, { freq: 320, freqTo: 90, dur: 0.6, type: 'saw', vol: 0.22, decay: 3 }),
     blip: makeBuffer(ctx, { freq: 660, dur: 0.05, type: 'square', vol: 0.12, decay: 4 }),
     high: makeBuffer(ctx, { freq: 700, freqTo: 1400, dur: 0.5, type: 'square', vol: 0.2, decay: 2 }),
+    power: makeBuffer(ctx, { freq: 523, freqTo: 1318, dur: 0.5, type: 'square', vol: 0.2, decay: 1.4 }),
   };
 }
 
@@ -398,6 +486,16 @@ function buildParticles(scene) {
 function popBurst(scene, x, y, tint, n) {
   scene.burst.setParticleTint(tint);
   scene.burst.emitParticleAt(x, y, n);
+}
+
+// floating "+N" / label that drifts up and fades — instant reward feedback
+function popText(scene, x, y, str, color, size) {
+  const tx = scene.add.text(x, y, str, {
+    fontFamily: 'Arial, sans-serif', fontStyle: 'bold', fontSize: (size || 18) + 'px',
+    color: color || '#fff4dc', stroke: '#07181f', strokeThickness: 4,
+  }).setOrigin(0.5).setDepth(14);
+  scene.tweens.add({ targets: tx, y: y - 38, alpha: 0, duration: 720, ease: 'Quad.easeOut',
+    onComplete: () => tx.destroy() });
 }
 
 // ===========================================================================
@@ -489,7 +587,8 @@ function startGame(scene) {
   scene.scores = scores;
   scene.G.bestMeters = scores.length ? scores[0].score : 0;
   scene.hud.combo.setText('');
-  startDrone(scene);
+  startMusic(scene);
+  if (scene._setStar) scene._setStar(false);
   play(scene, scene.sfx.start, 1, 0.8);
   setPhase(scene, 'play');
 }
@@ -581,6 +680,14 @@ function updatePlay(scene, dt) {
   ax.tilt = Phaser.Math.Linear(ax.tilt, Phaser.Math.Clamp(ax.vx / 400, -0.5, 0.5), 0.15);
 
   if (ax.inv > 0) ax.inv -= dt;
+  if (ax.star > 0) {
+    ax.star -= dt;
+    ax.inv = Math.max(ax.inv, 0.1);
+    if (Math.random() < 0.5)
+      popBurst(scene, ax.x + (Math.random() - 0.5) * 26, ax.y + (Math.random() - 0.5) * 26,
+        [0xff5d7a, 0xffd64d, 0x8be36b, 0x6cd6ff][Math.floor(G.t * 10) % 4], 2);
+    if (ax.star <= 0) { ax.star = 0; if (scene._setStar) scene._setStar(false); }
+  }
   if (ax.squash > 0) ax.squash = Math.max(0, ax.squash - dt * 3);
   if (ax.eatPulse > 0) ax.eatPulse = Math.max(0, ax.eatPulse - dt * 3);
   if (G.speedlines > 0) G.speedlines -= dt;
@@ -601,6 +708,7 @@ function updatePlay(scene, dt) {
   }
 
   if (G.comboTimer > 0) { G.comboTimer -= dt; if (G.comboTimer <= 0) G.combo = 0; }
+  scene.hud.combo.setText(G.combo >= 3 ? 'COMBO  x' + comboMult(G.combo) : '');
 
   scene.bubbles.emitting = true;
   scene.bubbles.setPosition(ax.x, ax.y + 16);
@@ -619,8 +727,8 @@ function updatePlay(scene, dt) {
   moveEntities(scene, G.hazards, spd, dt);
   collide(scene);
 
-  drawAxolotl(scene, ax.x, ax.y, G.t, { inv: ax.inv > 0, limbs: ax.limbs, tilt: ax.tilt,
-    squash: ax.squash, eat: ax.eatPulse, blink: ax.blink });
+  drawAxolotl(scene, ax.x, ax.y, G.t, { inv: ax.inv > 0 && ax.star <= 0, limbs: ax.limbs, tilt: ax.tilt,
+    squash: ax.squash, eat: ax.eatPulse, blink: ax.blink, star: ax.star > 0 });
   drawSpeedlines(scene);
   drawHud(scene);
 }
@@ -656,10 +764,10 @@ function moveEntities(scene, list, spd, dt) {
 function spawnWave(scene) {
   const m = scene.G.meters;
   const opts = [['food', 3], ['trash', 2]];
-  if (m > 120) opts.push(['carp', 2 + m * 0.0008]);
-  if (m > 320) opts.push(['net', 1.4]);
-  if (m > 520) opts.push(['boat', 1.2]);
-  if (m > 820) opts.push(['heron', 1.0 + m * 0.0004]);
+  if (m > 70) opts.push(['carp', 2 + m * 0.0008]);
+  if (m > 150) opts.push(['boat', 1.4]);
+  if (m > 260) opts.push(['net', 1.4]);
+  if (m > 560) opts.push(['heron', 1.0 + m * 0.0004]);
   let total = 0; for (const o of opts) total += o[1];
   let r = Math.random() * total, pick = 'food';
   for (const o of opts) { r -= o[1]; if (r <= 0) { pick = o[0]; break; } }
@@ -673,6 +781,8 @@ function spawnWave(scene) {
 
   if (Math.random() < 0.35) spawnFood(scene);
   if (Math.random() < 0.18) spawnDecor(scene);
+  if (Math.random() < 0.14) spawnAmbientBoat(scene);
+  if (m > 160 && m - scene.G.lastStar > 360 && Math.random() < 0.3) { spawnStar(scene); scene.G.lastStar = m; }
 }
 
 function randX(margin) { return Phaser.Math.Between(X_MIN + (margin || 0), X_MAX - (margin || 0)); }
@@ -685,18 +795,24 @@ function spawnDecor(scene) {
 function spawnFood(scene) {
   if (Math.random() < 0.08) {
     spawnEntity(scene, scene.G.foods, scene.layerHazard, 'egg', randX(20), -20,
-      { r: 16, solid: false, points: 60, food: 'egg', regen: 0.5 });
+      { r: 16, solid: false, points: 45, food: 'egg', regen: 0.5 });
   } else {
     const worm = Math.random() < 0.5;
     spawnEntity(scene, scene.G.foods, scene.layerHazard, worm ? 'worm' : 'larva', randX(10), -20,
-      { r: 13, solid: false, points: 18, food: 'worm', regen: 0.16, swim: true });
+      { r: 13, solid: false, points: 12, food: 'worm', regen: 0.16, swim: true });
   }
+}
+
+// Star power-up — temporary invincibility (smash everything you touch).
+function spawnStar(scene) {
+  spawnEntity(scene, scene.G.foods, scene.layerHazard, 'star', randX(24), -26,
+    { r: 20, solid: false, points: 30, food: 'star', regen: 0, spin: 2.2 });
 }
 
 function spawnTrash(scene) {
   const t = Phaser.Math.Between(0, 2);
   spawnEntity(scene, scene.G.hazards, scene.layerHazard, t === 0 ? 'bottle' : t === 1 ? 'tire' : 'bag', randX(10), -24,
-    { type: 'trash', r: 15, destructible: true, points: 12, spin: (Math.random() - 0.5) * 1.2 });
+    { type: 'trash', r: 15, destructible: true, points: 8, spin: (Math.random() - 0.5) * 1.2 });
 }
 
 function spawnCarp(scene) {
@@ -704,7 +820,7 @@ function spawnCarp(scene) {
   const n = Phaser.Math.Between(1, 2);
   for (let i = 0; i < n; i++) {
     spawnEntity(scene, scene.G.hazards, scene.layerHazard, 'carp', randX(20), -30 - i * 40,
-      { type: 'carp', r: 17, destructible: true, points: 22, vy: 60 + Math.random() * 70,
+      { type: 'carp', r: 17, destructible: true, points: 14, vy: 60 + Math.random() * 70,
         swim: true, tint: koi ? C.koi : C.carp, sx: 1.05 });
   }
 }
@@ -726,25 +842,51 @@ function spawnNet(scene) {
   }
 }
 
+const BOAT_COLS = [0xff4d4d, 0xffd23f, 0x3fa9f5, 0x8be36b, 0xff6ec7];
+
+// A colourful Xochimilco trajinera (flower arch + striped hull + name banner).
+function buildBoat(scene, bw) {
+  const cont = scene.add.container(0, 0);
+  const hull = scene.add.graphics();
+  // flower arch over the boat
+  hull.lineStyle(5, 0x2f8f4a, 1);
+  hull.beginPath(); hull.arc(0, -4, bw / 2 - 12, Math.PI, 0, false); hull.strokePath();
+  for (let i = 0; i <= 6; i++) {
+    const a = Math.PI + (i / 6) * Math.PI;
+    hull.fillStyle(BOAT_COLS[i % 5], 1);
+    hull.fillCircle(Math.cos(a) * (bw / 2 - 12), -4 + Math.sin(a) * (bw / 2 - 12), 5);
+  }
+  // hull
+  hull.fillStyle(C.boatHull, 1); hull.fillRoundedRect(-bw / 2, -22, bw, 44, 12);
+  hull.fillStyle(0x6b3618, 1); hull.fillRoundedRect(-bw / 2, 8, bw, 14, 8);
+  for (let i = 0; i < 5; i++) {
+    hull.fillStyle(BOAT_COLS[i], 1);
+    hull.fillRect(-bw / 2 + 8 + i * (bw - 16) / 5, -20, (bw - 16) / 5 - 3, 12);
+  }
+  hull.fillStyle(C.cream, 1); hull.fillRoundedRect(-bw / 2 + 14, -15, bw - 28, 9, 4);
+  cont.add(hull);
+  cont.add(scene.add.text(0, -14, 'XOCHIMILCO',
+    { fontFamily: 'Arial', fontStyle: 'bold', fontSize: '11px', color: '#7a1840' }).setOrigin(0.5));
+  return cont;
+}
+
 function spawnBoat(scene) {
   const bw = Phaser.Math.Between(150, 210);
   const x = randX(bw / 2 + 4);
-  const cont = scene.add.container(x, -50);
-  const hull = scene.add.graphics();
-  hull.fillStyle(C.boatHull, 1); hull.fillRoundedRect(-bw / 2, -22, bw, 44, 12);
-  hull.fillStyle(0x6b3618, 1); hull.fillRoundedRect(-bw / 2, 8, bw, 14, 8);
-  const cols = [0xff4d4d, 0xffd23f, 0x3fa9f5, 0x8be36b, 0xff6ec7];
-  for (let i = 0; i < 5; i++) {
-    hull.fillStyle(cols[i], 1);
-    hull.fillRect(-bw / 2 + 8 + i * (bw - 16) / 5, -20, (bw - 16) / 5 - 3, 12);
-  }
-  hull.fillStyle(C.cream, 1); hull.fillRoundedRect(-bw / 2 + 14, -16, bw - 28, 8, 4);
-  cont.add(hull);
-  cont.add(scene.add.text(0, -16, 'XOCHIMILCO',
-    { fontFamily: 'Arial', fontStyle: 'bold', fontSize: '12px', color: '#7a1840' }).setOrigin(0.5));
+  const cont = buildBoat(scene, bw).setPosition(x, -64);
   scene.layerHazard.add(cont);
-  scene.G.hazards.push({ spr: cont, x, y: -50, vy: -20, vx: 0, r: 0, type: 'boat', alive: true,
+  scene.G.hazards.push({ spr: cont, x, y: -64, vy: -20, vx: 0, r: 0, type: 'boat', alive: true,
     solid: true, destructible: false, points: 0, box: true, hw: bw / 2, hh: 22 });
+}
+
+// Dim, smaller trajineras moored along the banks — pure background flavour.
+function spawnAmbientBoat(scene) {
+  const bw = Phaser.Math.Between(90, 130);
+  const side = Math.random() < 0.5 ? -1 : 1;
+  const x = side < 0 ? CH_L + 28 + Math.random() * 26 : CH_R - 28 - Math.random() * 26;
+  const cont = buildBoat(scene, bw).setPosition(x, -70).setScale(0.7).setAlpha(0.5);
+  scene.layerDecor.add(cont);
+  scene.G.decor.push({ spr: cont, x, y: -70, vy: -45, vx: 0, r: 0, alive: true, solid: false });
 }
 
 function spawnHeron(scene) {
@@ -788,7 +930,7 @@ function collide(scene) {
 
   for (const e of G.hazards) {
     if (!e.alive || !overlapCircle(ax.x, ax.y, AXO_R - 2, e)) continue;
-    if (ax.dash > 0 && e.destructible) smash(scene, e);
+    if ((ax.dash > 0 || ax.star > 0) && e.destructible) smash(scene, e);
     else if (ax.inv > 0 || ax.dash > 0) { /* invulnerable — pass through */ }
     else takeHit(scene, e);
   }
@@ -796,14 +938,25 @@ function collide(scene) {
 
 function eatFood(scene, e) {
   const G = scene.G, ax = G.ax;
+  if (e.food === 'star') {
+    ax.star = 7;
+    G.flash = 0.25; G.shake = Math.max(G.shake, 7);
+    if (scene._setStar) scene._setStar(true);
+    play(scene, scene.sfx.power, 1, 0.9);
+    popBurst(scene, e.x, e.y, 0xffe066, 28);
+    popText(scene, e.x, e.y - 14, '¡ESTRELLA!', '#ffd64d', 26);
+    return;
+  }
   G.combo++; G.comboTimer = 2.4;
   const mult = comboMult(G.combo);
-  G.meters += e.points * mult * 0.1;
+  const gain = Math.round(e.points * mult);
+  G.meters += gain;
   G.foodBoost = Math.min(1.2, G.foodBoost + e.regen);
   ax.eatPulse = 1;
   play(scene, scene.sfx.chomp, e.food === 'egg' ? 0.8 : 1, 0.8);
   popBurst(scene, e.x, e.y, e.food === 'egg' ? 0xffd64d : 0xff7a45, e.food === 'egg' ? 16 : 8);
-  if (G.combo >= 3) showCombo(scene, G.combo, mult);
+  popText(scene, e.x, e.y - 12, '+' + gain, mult >= 3 ? '#ffd64d' : '#fff4dc', mult >= 3 ? 22 : 18);
+  comboPunch(scene);
 }
 
 function smash(scene, e) {
@@ -811,11 +964,13 @@ function smash(scene, e) {
   e.alive = false;
   G.combo++; G.comboTimer = 2.4;
   const mult = comboMult(G.combo);
-  G.meters += e.points * mult * 0.1;
+  const gain = Math.round(e.points * mult);
+  G.meters += gain;
   G.shake = Math.max(G.shake, 6);
   play(scene, scene.sfx.crunch, 1, 0.8);
   popBurst(scene, e.x, e.y, 0xcfd8b0, 16);
-  if (G.combo >= 3) showCombo(scene, G.combo, mult);
+  popText(scene, e.x, e.y - 12, '+' + gain, mult >= 3 ? '#ffd64d' : '#cfd8b0', mult >= 3 ? 22 : 18);
+  comboPunch(scene);
 }
 
 function takeHit(scene, e) {
@@ -829,10 +984,9 @@ function takeHit(scene, e) {
   if (ax.limbs <= 0) die(scene);
 }
 
-function comboMult(combo) { return 1 + Math.floor(combo / 3); }
+function comboMult(combo) { return Math.min(8, 1 + Math.floor(combo / 3)); }
 
-function showCombo(scene, combo, mult) {
-  scene.hud.combo.setText('x' + mult + '   COMBO ' + combo + (mult >= 3 ? '   RICO!' : ''));
+function comboPunch(scene) {
   scene.hud.combo.setScale(1.4);
   scene.tweens.killTweensOf(scene.hud.combo);
   scene.tweens.add({ targets: scene.hud.combo, scale: 1, duration: 220 });
@@ -850,7 +1004,8 @@ function drawAxolotl(scene, x, y, t, o) {
   const limbs = o.limbs == null ? 3 : o.limbs;
   const breathe = 1 + Math.sin(t * 2.4) * 0.03 + (o.squash || 0) * 0.18;
   const widthScale = 1 - (o.squash || 0) * 0.12 + (o.eat || 0) * 0.1;
-  const bodyCol = limbs <= 1 ? C.axoDark : C.axo;
+  const bodyCol = o.star ? [0xff5d7a, 0xffd64d, 0x8be36b, 0x6cd6ff, 0xc78bff][Math.floor(t * 12) % 5]
+    : (limbs <= 1 ? C.axoDark : C.axo);
 
   g.save();
   g.translateCanvas(x, y);
@@ -867,23 +1022,17 @@ function drawAxolotl(scene, x, y, t, o) {
   g.fillTriangle(-3, 4, 3, 4, 0, 24);
   g.restore();
 
-  // legs (lose from the back when wounded)
+  // legs (always four; just wiggle for life)
   const legWig = Math.sin(t * 8) * 3;
   g.fillStyle(bodyCol, 1);
-  const legs = [[-16, -2, 0], [16, -2, 0], [-15, 16, 1], [15, 16, 1]];
-  const visibleLegs = Math.max(0, limbs) + 1;
-  for (let i = 0; i < legs.length; i++) {
-    if (i >= visibleLegs) continue;
-    const l = legs[i];
+  for (const l of [[-16, -2, 0], [16, -2, 0], [-15, 16, 1], [15, 16, 1]]) {
     g.fillEllipse(l[0], l[1] + (l[2] ? legWig : -legWig) * 0.3, 12, 7);
   }
 
-  // gills (3 fronds per side) — flutter; shed when wounded
+  // gills — up to 3 fronds per side, lost SYMMETRICALLY (both sides) when wounded
   const gillCount = Phaser.Math.Clamp(limbs, 0, 3);
   for (let side = -1; side <= 1; side += 2) {
-    for (let i = 0; i < 3; i++) {
-      if (side === 1 && i >= gillCount) continue;
-      if (side === -1 && i >= gillCount && limbs < 1) continue;
+    for (let i = 0; i < gillCount; i++) {
       const a = side * (0.5 + i * 0.45) + Math.sin(t * 7 + i + (side > 0 ? 1.6 : 0)) * 0.18;
       g.fillStyle(C.gill, 1);
       for (let k = 1; k <= 3; k++) {
@@ -938,19 +1087,29 @@ function drawSpeedlines(scene) {
 function drawHud(scene) {
   const G = scene.G, ax = G.ax;
 
+  // health bar: little gill icon + 3 segments (regrowing segment fills green)
   const gg = scene.hud.gills;
   gg.clear();
+  gg.fillStyle(C.gill, 1);
+  for (let k = 1; k <= 3; k++) gg.fillCircle(24, 30 - k * 4, 5 - k);
+  gg.fillStyle(C.axo, 1); gg.fillCircle(24, 34, 6);
+  const bx = 42, by = 18, segW = 46, segH = 18, gap = 5;
   for (let i = 0; i < 3; i++) {
-    const cx = 26 + i * 30, cy = 30;
-    const on = i < ax.limbs;
-    gg.fillStyle(on ? C.gill : 0x3a4a52, on ? 1 : 0.6);
-    for (let k = 1; k <= 3; k++) gg.fillCircle(cx, cy - k * 5, 5 - k);
-    gg.fillStyle(on ? C.axo : 0x33444c, 1);
-    gg.fillCircle(cx, cy + 4, 6);
+    const x = bx + i * (segW + gap);
+    gg.fillStyle(C.ink, 0.55); gg.fillRoundedRect(x, by, segW, segH, 5);
+    if (i < ax.limbs) {
+      gg.fillStyle(C.gill, 1); gg.fillRoundedRect(x + 2, by + 2, segW - 4, segH - 4, 4);
+    } else if (i === ax.limbs && ax.limbs < 3) {
+      gg.fillStyle(C.good, 0.95);
+      gg.fillRoundedRect(x + 2, by + 2, (segW - 4) * Phaser.Math.Clamp(ax.regen, 0, 1), segH - 4, 4);
+    }
+    gg.lineStyle(2, 0x0b2a36, 1); gg.strokeRoundedRect(x, by, segW, segH, 5);
   }
-  if (ax.limbs < 3) {
-    gg.fillStyle(C.good, 0.9);
-    gg.fillRect(26 + ax.limbs * 30 - 8, 44, 16 * Phaser.Math.Clamp(ax.regen, 0, 1), 3);
+  // star (invincibility) timer
+  if (ax.star > 0) {
+    const sw = 130, sxx = W / 2 - sw / 2, syy = 70;
+    gg.fillStyle(C.ink, 0.5); gg.fillRoundedRect(sxx, syy, sw, 10, 5);
+    gg.fillStyle(0xffe066, 1); gg.fillRoundedRect(sxx, syy, sw * Phaser.Math.Clamp(ax.star / 7, 0, 1), 10, 5);
   }
 
   const db = scene.hud.dashbar;
@@ -995,7 +1154,7 @@ function showGameOver(scene) {
     scene.overFact.setText('');
     scene.lbTitle.setText('NUEVO RECORD! Pon tus iniciales').setY(244);
     scene.lbBody.setText('');
-    scene.initLabel.setText('Joystick arriba/abajo: letra   izq/der: posicion   Boton 1: ok').setVisible(true);
+    scene.initLabel.setText('Mueve el joystick para elegir tus iniciales  ·  Boton 1 o START: GUARDAR').setVisible(true);
     scene.initG.setVisible(true);
     scene.overHint.setText('');
     G.slot = 0; G.initials = [0, 0, 0]; G.saved = false; G.repeat = 0.35;
@@ -1023,7 +1182,7 @@ function updateDead(scene, dt) {
   }
 }
 
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.-0123456789';
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.-';
 
 function updateInitials(scene, dt) {
   const G = scene.G;
@@ -1031,19 +1190,17 @@ function updateInitials(scene, dt) {
   let changed = false;
   const cycle = (d) => { G.initials[G.slot] = (G.initials[G.slot] + d + ALPHABET.length) % ALPHABET.length; changed = true; };
 
-  if (justPressed('P1_U')) cycle(1);
-  if (justPressed('P1_D')) cycle(-1);
-  if (justPressed('P1_R')) { G.slot = Math.min(2, G.slot + 1); changed = true; }
-  if (justPressed('P1_L')) { G.slot = Math.max(0, G.slot - 1); changed = true; }
-  if ((held.P1_U || held.P1_D) && G.repeat <= 0) { cycle(held.P1_U ? 1 : -1); G.repeat = 0.14; }
+  // one step per fresh press; hold to auto-repeat. DOWN = A→B→C, UP = back.
+  if (justPressed('P1_D')) { cycle(1); G.repeat = 0.32; }
+  else if (justPressed('P1_U')) { cycle(-1); G.repeat = 0.32; }
+  else if ((held.P1_U || held.P1_D) && G.repeat <= 0) { cycle(held.P1_D ? 1 : -1); G.repeat = 0.12; }
+  if (justPressed('P1_R')) { G.slot = (G.slot + 1) % 3; changed = true; }
+  if (justPressed('P1_L')) { G.slot = (G.slot + 2) % 3; changed = true; }
 
   if (changed) { play(scene, scene.sfx.blip, 1, 0.7); drawInitials(scene); }
 
-  if (justPressed('P1_1')) {
-    if (G.slot < 2) { G.slot++; play(scene, scene.sfx.blip, 1.2, 0.7); drawInitials(scene); }
-    else submitScore(scene);
-  }
-  if (justPressed('START1') || justPressed('START2')) submitScore(scene);
+  // joystick picks the letters; one button (or START) saves the whole name.
+  if (justPressed('P1_1') || justPressed('START1') || justPressed('START2')) submitScore(scene);
 }
 
 function drawInitials(scene) {
@@ -1058,6 +1215,11 @@ function drawInitials(scene) {
     g.lineStyle(3, i === G.slot ? C.accent : 0x3a4a52, 1);
     g.strokeRoundedRect(x - 24, 330, 48, 56, 8);
   }
+  // ▲▼ hint arrows on the active slot
+  const sx = cx + G.slot * 60;
+  g.fillStyle(C.accent, 1);
+  g.fillTriangle(sx - 7, 322, sx + 7, 322, sx, 314);
+  g.fillTriangle(sx - 7, 394, sx + 7, 394, sx, 402);
   if (!scene.initChars) {
     scene.initChars = [];
     for (let i = 0; i < 3; i++) {
